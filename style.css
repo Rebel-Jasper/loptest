@@ -1,0 +1,263 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+nav {
+    position: fixed;
+    top: 0;
+    height: 50px;
+    width: 100%;
+    z-index: 100;
+    transition: top 1s;
+    background-color: #ffd6c7;
+}
+
+body {
+    background-image:
+        url(images/gold.jpg);
+    background-attachment: fixed;
+    font-family: "Cormorant Infant", serif;
+    font-weight: bold;
+}
+
+header {
+    height: 50px;
+}
+
+.page {
+    background-color: #fffefa;
+    background-image:
+        url(images/bg1.png),
+        url(images/bg3.png),
+        url(images/bg2.png);
+    background-repeat: no-repeat;
+    background-position: top, bottom, bottom;
+    background-size: contain, contain, 100% 10000%;
+    color: #a26960;
+    text-align: justify;
+}
+
+.scontent {
+    padding: 7% 7% 1% 7%;
+}
+
+.econtent {
+    padding: 3% 7% 7% 7%;
+
+    li {
+        list-style-type: none;
+    }
+
+    li:before {
+        content: "❀ ";
+    }
+}
+
+.content {
+    padding: 0% 7% 0% 7%;
+
+    li:before {
+        content: "❀ ";
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        padding: 2% 0% 1% 0%;
+    }
+}
+
+.single-image {
+    /* width: 50vw;
+    min-width: 250px; */
+    height: auto;
+    position: absolute;
+}
+
+.pink {
+    background-color: #a26960;
+    font-family: "Cormorant Infant", serif;
+}
+
+.pink:hover {
+    background-color: #794f48;
+}
+
+button {
+    padding: 5px 10px;
+    cursor: pointer;
+    color: white;
+    border: none;
+    border-radius: 3px;
+}
+
+.location-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.location-name {
+    width: 110px;
+}
+
+.checkbox-container {
+    width: 120px;
+    display: inline-flex;
+    justify-content: flex-start;
+}
+
+.location-label {
+    color: #555;
+}
+
+.result-table {
+    border-collapse: collapse;
+    width: auto;
+    color: #472f2b;
+}
+
+.result-table th,
+.result-table td {
+    border: 2px solid #81676d;
+    padding: 8px;
+    white-space: nowrap;
+    /* Prevent wrapping */
+}
+
+.result-table th {
+    background-color: #dfc4c9;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.result-table th:first-child,
+.result-table td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background-color: #f3e2e2;
+}
+
+.result-table th:first-child {
+    z-index: 3;
+    /* Higher z-index for top-left cell */
+    background-color: #dfc4c9;
+}
+
+.result-table td:nth-child(2),
+.result-table th:nth-child(2) {
+    text-align: center;
+}
+
+.result-table td:nth-child(n+3),
+.result-table th:nth-child(n+3) {
+    text-align: center;
+}
+
+.tbcolour {
+    background-color: #f8efea;
+}
+
+#influence {
+    font-size: clamp(10px, 2vw, 15px);
+    font-weight: bold;
+    height: 2vw;
+    max-height: 15px;
+    font-family: "Cormorant Infant", serif;
+}
+
+#crit {
+    font-size: clamp(10px, 2vw, 15px);
+    font-weight: bold;
+    height: 3vw;
+    max-height: 20px;
+    font-family: "Cormorant Infant", serif;
+}
+
+#pink {
+    display: none; /* Image is hidden by default */
+    max-width: 100%;
+    height: auto;
+}
+
+
+.table-wrapper {
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+@media (max-width: 768px) {
+    .page {
+        margin: 0;
+    }
+
+    .content,
+    .scontent,
+    .econtent {
+        font-size: 2.4dvw;
+    }
+
+    .pink,
+    .result-table {
+        font-size: 2.4dvw;
+    }
+
+    .single-image {
+    right: 7%;
+    width: 50vw;
+    min-width: 250px;
+    max-width: 320px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .page {
+        margin: 0 10dvw 0 10dvw;
+    }
+
+    .content,
+    .scontent,
+    .econtent {
+        font-size: 1.9dvw;
+    }
+
+    .pink,
+    .result-table {
+        font-size: 1.9dvw;
+    }
+
+    .single-image {
+        right: 21%;
+        width: 38vw;
+        max-width: 330px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .page {
+        margin: 0px 20dvw 0px 20dvw;
+    }
+
+    .content,
+    .scontent,
+    .econtent {
+        font-size: 1.4dvw;
+    }
+
+    .pink,
+    .result-table {
+        font-size: 1.09dvw;
+    }
+
+    .single-image {
+        right: 30%;
+        width: 26vw;
+        max-width: 330px;
+    }
+}
