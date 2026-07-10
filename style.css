@@ -55,7 +55,7 @@ header {
 }
 
 .content {
-    padding: 0% 7% 0% 7%;
+    padding: 7% 7% 0% 7%;
 
     li:before {
         content: "❀ ";
@@ -67,7 +67,7 @@ header {
     h4,
     h5,
     h6 {
-        padding: 2% 0% 1% 0%;
+        padding: 0% 0% 2% 0%;
     }
 }
 
@@ -95,20 +95,72 @@ button {
     border-radius: 3px;
 }
 
+h4 {
+    text-decoration: underline;
+}
+
+.locations-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px 60px;
+}
+
+.high-titles {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    margin-top: 30px;}
+
 .location-item {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid #eee;
 }
 
 .location-name {
-    width: 110px;
+    min-width: none;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    font-style: italic;
 }
 
 .checkbox-container {
-    width: 120px;
+    width: 30px;
     display: inline-flex;
     justify-content: flex-start;
+}
+
+.tri-state {
+    width: 12px;
+    height: 12px;
+    border: 2px solid #a26960;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+    background: #fff;
+    flex-shrink: 0; /* чтобы не сжимался */
+}
+
+.tri-state.neutral {
+    background: #fff;
+}
+
+.tri-state.include {
+    background: #c8e6c9;
+    color: #2e7d32;
+}
+
+.tri-state.exclude {
+    background: #ffcdd2;
+    color: #c62828;
 }
 
 .location-label {
@@ -174,9 +226,9 @@ button {
 
 #crit {
     font-size: clamp(10px, 2vw, 15px);
-    font-weight: bold;
-    height: 3vw;
-    max-height: 20px;
+    font-weight: 600;
+    /* height: 3vw;
+    max-height: 20px; */
     font-family: "Cormorant Infant", serif;
 }
 
@@ -184,7 +236,10 @@ button {
     display: none; /* Image is hidden by default */
     max-width: 100%;
     height: auto;
-}
+    /* border-width: 5px;
+    border-color: #794f48;
+    border-style: solid; */
+    }
 
 
 .table-wrapper {
@@ -195,17 +250,19 @@ button {
 @media (max-width: 768px) {
     .page {
         margin: 0;
+        
     }
 
     .content,
     .scontent,
     .econtent {
-        font-size: 2.4dvw;
+        font-size: 14px;
     }
 
     .pink,
-    .result-table {
-        font-size: 2.4dvw;
+    .result-table,
+    #crit {
+        font-size: 14px;
     }
 
     .single-image {
@@ -216,20 +273,51 @@ button {
     }
 }
 
-@media (min-width: 768px) and (max-width: 1024px) {
+@media (min-width: 768px) and (max-width: 992px) {
     .page {
         margin: 0 10dvw 0 10dvw;
+        min-width: 700px; 
+        max-width: 700px; /* фиксированный размер страницы */
+        margin: 0 auto; /* страница посередине */
     }
 
     .content,
     .scontent,
     .econtent {
-        font-size: 1.9dvw;
+        /* font-size: 1.9dvw; */
+        font-size: 14px;
     }
 
     .pink,
-    .result-table {
-        font-size: 1.9dvw;
+    .result-table,
+    #crit {
+        font-size:  13px;
+    }
+
+    .single-image {
+        right: 21%;
+        width: 38vw;
+        max-width: 330px;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1024px) {
+    .page {
+        margin: 0px 20dvw 0px 20dvw;
+        min-width: 800px; 
+        max-width: 800px; /* фиксированный размер страницы */
+        margin: 0 auto; /* страница посередине */
+    }
+    
+    .content,
+    .econtent {
+        font-size: 16px; /* размер шрифта страницы */
+    }
+
+    .pink,
+    .result-table,
+    #crit {
+        font-size: 15px; /* размер шрифта кнопок и таблицы */
     }
 
     .single-image {
@@ -242,17 +330,20 @@ button {
 @media (min-width: 1024px) {
     .page {
         margin: 0px 20dvw 0px 20dvw;
+        min-width: 900px; 
+        max-width: 900px; /* фиксированный размер страницы */
+        margin: 0 auto; /* страница посередине */
     }
-
+    
     .content,
-    .scontent,
     .econtent {
-        font-size: 1.4dvw;
+        font-size: 18px; /* размер шрифта страницы */
     }
 
     .pink,
-    .result-table {
-        font-size: 1.09dvw;
+    .result-table,
+    #crit {
+        font-size: 16px; /* размер шрифта кнопок и таблицы */
     }
 
     .single-image {
@@ -260,4 +351,18 @@ button {
         width: 26vw;
         max-width: 330px;
     }
+}
+
+.mandatory-group label {
+            display: flex;
+            align-items: center;
+}
+
+.mandatory-group span {
+            display: inline-block;
+            width: 110px;
+}
+
+input[type="checkbox"].mandatory {
+    accent-color: #a26960;
 }
