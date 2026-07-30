@@ -218,6 +218,7 @@ h4 {
 
 #influence {
     font-size: clamp(10px, 2vw, 15px);
+    font-weight: 600;
     /* font-weight: bold;
     height: 2vw;
     max-height: 15px; */
