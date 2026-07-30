@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Калькулятор магазина Зала Войны</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,300..700;1,300..700&display=swap"
+        rel="stylesheet">
+    <link rel="icon" href="favicon.ico">
+</head>
+
+<body>
+    <header>
+        <nav id="navbar">
+            <script>
+                let lastScrollTop = 0;
+                const navbar = document.getElementById('navbar');
+
+                window.addEventListener('scroll', function () {
+                    let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+
+                    if (currentScroll > lastScrollTop) {
+                        // Прокрутка вниз
+                        navbar.style.top = '-60px'; // Скрываем навбар
+                    } else {
+                        // Прокрутка вверх
+                        navbar.style.top = '0'; // Показываем навбар
+                    }
+                    lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // Обновляем последнее положение прокрутки
+                });
+            </script>
+        </nav>
+    </header>
+    <div class="page">
+    <div class="scontent">
+            <h1>Калькулятор магазина Зала Войны</h1>
+            <section>
+                <h2>Ежедневный доход очков Зала Войны</h2>
+                <h3>Автоподсчёт:</h3>
+                <p>Количество ваших помощников:</p>
+                <input id="assistants" type="number" min="0">
+                <br>
+                <label>
+                    <input id="knifeCheck" type="checkbox"> Полностью прохожу острие ножа
+                </label>
+                <br>
+                <button class="pink" onclick="calcAndSetAuto()">Рассчитать и установить как ежедневный доход</button>
+                <br>
+                <details>
+                    <summary>Подсказка по автоподсчёту</summary>
+                    <p>Максимальное количество очков за 1 помощника — 150 (при влиянии ≥ 1.8М). При прохождении острия
+                        ножа +704 очка.</p>
+                </details>
+                <br><br>
+                <h3>Или ввести вручную:</h3>
+                <input id="manualDaily" type="number" min="0" value="0">
+                <br>
+                <button class="pink" onclick="setManualDaily()">Установить как ежедневный доход</button>
+                <br><br>
+                <h3><strong>Текущий ежедневный доход:</strong> <span id="currentDaily"
+                        style="font-size:18px; color:#000;">0</span> очков</h3>
+            </section>
+
+            <section>
+                <h2>Калькулятор магазина (оптимальные покупки)</h2>
+                <h3>Обязательная покупка одежды</h3>
+                <div class="mandatory-group">
+                    <label>
+                        <span>Шапка:</span>
+                        <input type="number" id="mand-hat" min="0" max="10" value="10">
+                    </label>
+                    <label>
+                        <span>Одеяние:</span>
+                        <input type="number" id="mand-robe" min="0" max="10" value="10">
+                    </label>
+                    <label>
+                        <span>Пояс:</span>
+                        <input type="number" id="mand-belt" min="0" max="10" value="10">
+                    </label>
+                </div>
+                <br>
+
+                <h3>Приоритет книг</h3>
+                <select id="bookMode">
+                    <option value="maxAttr">Максимальное количество атрибутов</option>
+                    <option value="maxQty">Максимальное количество книг</option>
+                </select>
+                <br><br>
+
+                <button button class="pink" onclick="optimizePurchases()">Подобрать идеальный список ежедневных
+                    покупок</button>
+
+                <div id="optimizeResult" class="result" style="display:none;"></div>
+            </section>
+
+            <script>
+                const items = {
+                    hat: { name: 'Шапка', base: 100, attr: 0 },
+                    robe: { name: 'Одеяние', base: 100, attr: 0 },
+                    belt: { name: 'Пояс', base: 100, attr: 0 },
+                    dict: { name: 'Словарь', base: 20, attr: 100 },
+                    enc: { name: 'Энциклопедия', base: 100, attr: 500 },
+                    coll: { name: 'Собрание', base: 200, attr: 1000 }
+                };
+
+                // Правильный расчёт стоимости с учётом floor на каждом шаге, но продолжением от точного значения
+                function getItemCost(basePrice, quantity) {
+                    if (quantity === 0) return 0;
+
+                    let totalCost = 0;
+                    let currentPrice = basePrice;   // точная цена для следующего расчёта
+
+                    for (let i = 1; i <= quantity; i++) {
+                        // Игрок платит округлённое вниз значение
+                        const paid = Math.floor(currentPrice);
+                        totalCost += paid;
+
+                        // Но следующая цена считается от точного значения × 1.2
+                        currentPrice = currentPrice * 1.2;
+                    }
+
+                    return totalCost;
+                }
+
+                function setManualDaily() {
+                    const val = parseInt(document.getElementById('manualDaily').value) || 0;
+                    document.getElementById('currentDaily').textContent = val;
+                }
+
+                function calcAndSetAuto() {
+                    const assistants = parseInt(document.getElementById('assistants').value) || 0;
+                    const knife = document.getElementById('knifeCheck').checked;
+                    let income = assistants * 150;
+                    if (knife) income += 704;
+                    document.getElementById('currentDaily').textContent = income;
+                }
+
+                function updateManualCalc() {
+                    let totalCost = 0;
+                    let totalAttr = 0;
+
+                    const quantities = {
+                        hat: parseInt(document.getElementById('qty-hat').value) || 0,
+                        robe: parseInt(document.getElementById('qty-robe').value) || 0,
+                        belt: parseInt(document.getElementById('qty-belt').value) || 0,
+                        dict: parseInt(document.getElementById('qty-dict').value) || 0,
+                        enc: parseInt(document.getElementById('qty-enc').value) || 0,
+                        coll: parseInt(document.getElementById('qty-coll').value) || 0
+                    };
+
+                    Object.keys(items).forEach(key => {
+                        const qty = quantities[key];
+                        const cost = getItemCost(items[key].base, qty);
+                        const attr = qty * items[key].attr;
+
+                        document.getElementById(`cost-${key}`).textContent = cost;
+                        document.getElementById(`attr-${key === 'dict' ? 'dict' : key === 'enc' ? 'enc' : key === 'coll' ? 'coll' : key}`).textContent = attr;
+
+                        totalCost += cost;
+                        totalAttr += attr;
+                    });
+
+                    document.getElementById('totalCost').textContent = totalCost;
+                    document.getElementById('totalAttr').textContent = totalAttr;
+                }
+
+                function optimizePurchases() {
+                    const daily = parseInt(document.getElementById('currentDaily').textContent) || 0;
+                    if (daily <= 0) {
+                        alert('Сначала укажите ежедневный доход!');
+                        return;
+                    }
+
+                    const mandHat = parseInt(document.getElementById('mand-hat').value) || 0;
+                    const mandRobe = parseInt(document.getElementById('mand-robe').value) || 0;
+                    const mandBelt = parseInt(document.getElementById('mand-belt').value) || 0;
+
+                    const clothesCost =
+                        getItemCost(items.hat.base, mandHat) +
+                        getItemCost(items.robe.base, mandRobe) +
+                        getItemCost(items.belt.base, mandBelt);
+
+                    if (clothesCost > daily) {
+                        alert('Недостаточно очков даже на обязательную одежду!');
+                        return;
+                    }
+
+                    const remaining = daily - clothesCost;
+                    const mode = document.getElementById('bookMode').value;
+
+                    let bestScore = -1;
+                    let best = { dict: 0, enc: 0, coll: 0 };
+                    let bestCost = 0;
+
+                    for (let d = 0; d <= 10; d++) {
+                        for (let e = 0; e <= 10; e++) {
+                            for (let c = 0; c <= 10; c++) {
+                                const bookCost =
+                                    getItemCost(items.dict.base, d) +
+                                    getItemCost(items.enc.base, e) +
+                                    getItemCost(items.coll.base, c);
+
+                                if (bookCost > remaining) continue;
+
+                                const score = (mode === 'maxQty')
+                                    ? (d + e + c)
+                                    : (d * 100 + e * 500 + c * 1000);
+
+                                if (score > bestScore || (score === bestScore && bookCost < bestCost)) {
+                                    bestScore = score;
+                                    best = { dict: d, enc: e, coll: c };
+                                    bestCost = bookCost;
+                                }
+                            }
+                        }
+                    }
+
+                    const totalCost = clothesCost + bestCost;
+                    const remainder = daily - totalCost;
+                    const totalAttr = best.dict * 100 + best.enc * 500 + best.coll * 1000;
+
+                    let html = `
+            <h3>Рекомендуемые ежедневные покупки</h3>
+            <strong>Одежда (обязательно):</strong><br>
+            • Шапка — ${mandHat} шт.<br>
+            • Одеяние — ${mandRobe} шт.<br>
+            • Пояс — ${mandBelt} шт.<br><br>
+            
+            <strong>Книги:</strong><br>
+            • Словарь — ${best.dict} шт.<br>
+            • Энциклопедия — ${best.enc} шт.<br>
+            • Собрание — ${best.coll} шт.<br><br>
+            
+            <strong>Итого:</strong><br>
+            Общая стоимость: ${totalCost} очков<br>
+            Остаток: ${remainder} очков<br>
+            Получено атрибутов: ${totalAttr}<br>
+            Получено книг:
+        `;
+
+                    document.getElementById('optimizeResult').innerHTML = html;
+                    document.getElementById('optimizeResult').style.display = 'block';
+                }
+
+                // Инициализация
+                window.onload = () => updateManualCalc();
+            </script>
+        </div>
+        <div class="econtent">
+            <ul>
+                <li><a href="index.html" style="color: #a26960;">Other</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</body>
+
+</html>
